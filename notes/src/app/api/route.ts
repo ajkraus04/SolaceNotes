@@ -20,12 +20,13 @@ export async function GET(request: NextRequest) {
 //Inserts note into DB
 export async function POST(request: NextRequest) {
     try {
-        const {note} : {note: string}  = await request.json();
+        const {noteText} : {noteText: string} = await request.json();
         const newNote = await prisma.notes.create({
             data: {
-                note: note
+                note: noteText
             }
         })
+        console.log(newNote)
         return NextResponse.json({newNote})
     } catch (err) {
         console.log("There is an error in POST /api route ", err )
@@ -37,7 +38,6 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
     try{
         const {id, note} : {id: number, note:string} = await request.json()
-        console.log(id, note)
         const updatedNote = await prisma.notes.update({
             where: {
                 id: id
@@ -49,6 +49,23 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json({updatedNote})
     } catch (err) {
         console.log("There is an error in UPDATE /api route ", err)
+        return NextResponse.json({err})
+    }
+}
+
+
+//Delete Note from DB
+export async function DELETE(request: NextRequest){
+    try{
+        const {note} = await request.json()
+        const deletedNote = await prisma.notes.delete({
+            where: {
+                id: note.id
+            }
+        })
+        return NextResponse.json({deletedNote})
+    } catch (err) {
+        console.log("There is an error in DELETE /api route ", err)
         return NextResponse.json({err})
     }
 }

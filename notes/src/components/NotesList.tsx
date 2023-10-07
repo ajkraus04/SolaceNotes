@@ -6,19 +6,20 @@ import {v4 as uuidv4} from 'uuid'
 
 type NotesListProps = {
     notes: Note[];
-    handleAddCard: (note: String) => void;
+    handleAddCard: (note: String) => Promise<boolean>;
+    handleDeleteNote: (note: Note) => Promise<void>;
 }
 
-export default function NotesList({notes, handleAddCard}: NotesListProps) {
+export default function NotesList({notes, handleAddCard, handleDeleteNote}: NotesListProps) {
     
     //Create an Array of all Notes
     const noteCards = notes.map(note=>
-        <NoteCard key={uuidv4()} note={note} />
+        <NoteCard key={uuidv4()} handleDeleteNote={handleDeleteNote} note={note} />
     );
 
     return(
         <div className="grid lg:grid-cols-3 sm:grid-cols-2 gap-4 mt-10">
-          <AddCard handleAddCard={handleAddCard}/>
+          <AddCard  handleAddCard={handleAddCard}/>
           {noteCards}
         </div>
     );

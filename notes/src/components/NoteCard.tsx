@@ -4,11 +4,12 @@ import {useState} from "react"
 
 
 type NoteCardProps = {
-    note: Note
+    note: Note;
+    handleDeleteNote: (note: Note) => Promise<void>;
 }
 
 
-export default function NoteCard({note}: NoteCardProps){
+export default function NoteCard({note, handleDeleteNote}: NoteCardProps){
     const [editMode,setEditMode] = useState<boolean>(false);
     const [noteText, setNotetext] = useState<string>(note.note)
     
@@ -43,7 +44,7 @@ export default function NoteCard({note}: NoteCardProps){
               <div className="break-words wrap">{noteText}</div>
               <div className="flex">
                 <button className="btn btn-accent grow" onClick={()=>setEditMode(true)}>Edit</button>
-                <button className="btn btn-error grow" >Delete</button>
+                <button className="btn btn-error grow" onClick={()=>handleDeleteNote(note)}>Delete</button>
               </div>
             </div>
             )}

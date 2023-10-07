@@ -1,40 +1,65 @@
 'use client'
 import SearchBar from "@/components/SearchBar";
 import NotesList from "@/components/NotesList";
-import { useState, useEffect } from "react"
+import { useState, useEffect, useRef } from "react";
 import { Note } from "@/types";
 
 
 export default function NotesContainer() {
 
  const [notes,setNotes] = useState<Note[]>([]);
- const [searchText, setSearchText] = useState<String>("")
+ const [searchText, setSearchText] = useState<string>("")
+ 
  
  //Handler Functons
- const handleSearchText = (note: String): void => {
+
+ //Filters the Notes out based on search
+const handleFilterNotes = (): Note[] => {
+    if (searchText.length > 1) {
+        const filteredNotes = notes.filter((note)=> note.note.toLowerCase().includes(searchText.toLowerCase()));
+        return filteredNotes;
+    } else {
+        return notes;
+    }
+}
+
+ const handleSearchText = (note: string): void => {
     setSearchText(note)};
 
-const handleDeleteNote = (note: Note):void =>{
-    
+//Deleted Note from DB
+const handleDeleteNote = async (note: Note):Promise<void> => {
+    try{ 
+        const deletedNote = await fetch('/api', {
+            method: "DELETE",
+            headers: {"Content-Type": "application/json"},
+            body: JSON.stringify({note})
+        })
+        const data = await deletedNote.json();
+        const remainingNotes = notes.filter((note)=>note.id !== data.deletedNote.id);
+        setNotes(remainingNotes);
+    } catch(err) {
+        console.log(`Error: ${err}`);
+    }
 }
 
 //Add card to DB and update state
-const handleAddCard = async (note:String):Promise<void> => {
+const handleAddCard = async (noteText:String):Promise<boolean> => {
     try{
-        console.log(note)
+        console.log(noteText)
         const newCardPromise = await fetch('/api',{
             method:'POST',
             headers:{
-                'Content-Type': "application/json"
+                'Content-Type': "application/json", 
             },
-            body: JSON.stringify({note})
+            body: JSON.stringify({noteText})
         });
-
         const {newNote} : {newNote: Note}= await newCardPromise.json();
-        setNotes([newNote,...notes])
-        
+        //Newest Note to the front
+        setNotes([newNote,...notes]);
+        return true;
     }catch (err) {
-        console.log(`Error: ${err}`)
+        console.log(`Error: ${err}`);
+        return false;
     }
 }
 
@@ -44,12 +69,13 @@ const handleAddCard = async (note:String):Promise<void> => {
     .then((res)=>res.json())
     .then(({notes})=>{
         setNotes(notes)})
-},[])
+    .catch(err=>console.log(`Error: ${err}`))
+},[]);
 
     return (
         <div className="flex flex-col items-center">
             <SearchBar handleSearchText={handleSearchText} />
-            <NotesList handleAddCard={handleAddCard} notes={notes}/>
+            <NotesList  handleAddCard={handleAddCard} handleDeleteNote={handleDeleteNote} notes={handleFilterNotes()}/>
         </div>
     )
 }
