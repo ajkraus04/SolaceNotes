@@ -21,8 +21,8 @@ export default function AddCard({ handleAddCard  } : AddCardProps){
 
    
     return(
-    <div className="card w-96 h-52 bg-primary shadow-xl p-2 text-black">
-      <textarea className="bg-white h-48 rounded-md p-2" onChange={(e)=> setNoteText(e.target.value)}  maxLength={300} value={noteText} ></textarea>
+    <div className="card w-96 h-72 bg-primary shadow-xl p-2 text-black">
+      <textarea className="bg-white h-64 rounded-md p-2 resize-none" onChange={(e)=> setNoteText(e.target.value)}  maxLength={300} value={noteText} ></textarea>
       <button className="btn btn-accent" onClick={handleCards}>
             Add Card
       </button>

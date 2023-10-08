@@ -34,17 +34,17 @@ export default function NoteCard({note, handleDeleteNote}: NoteCardProps){
     return(
         <div className="card w-96 h-42 bg-primary">
             {editMode ?
-            (<div className="card w-96 h-52 shadow-xl p-2 text-primary-content">
-              <textarea className="bg-white text-black h-48 p-2 rounded-md" onChange={(e)=> setNotetext(e.target.value)}  maxLength={300} defaultValue={noteText}></textarea>
+            (<div className="card w-96 h-72 shadow-xl p-2 text-primary-content">
+              <textarea className="bg-white text-black h-64 p-2 rounded-md resize-none" onChange={(e)=> setNotetext(e.target.value)}  maxLength={300} defaultValue={noteText}></textarea>
               <button className="btn btn-accent" onClick={(e)=>handleSaveEdit(noteText)}>Save</button> 
              </div>)
             : 
             (
-            <div className="flex justify-between card w-96 h-52 shadow-xl p-2 text-primary-content">
+            <div className="flex justify-between card w-96 h-72 shadow-xl p-2 text-primary-content">
               <div className="break-words wrap">{noteText}</div>
               <div className="flex">
-                <button className="btn btn-accent grow" onClick={()=>setEditMode(true)}>Edit</button>
-                <button className="btn btn-error grow" onClick={()=>handleDeleteNote(note)}>Delete</button>
+                <button className="btn w-1/2 btn-accent grow" onClick={()=>setEditMode(true)}>Edit</button>
+                <button className="btn w-1/2 btn-error grow" onClick={()=>handleDeleteNote(note)}>Delete</button>
               </div>
             </div>
             )}

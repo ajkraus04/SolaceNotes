@@ -15,7 +15,7 @@ export default function NotesContainer() {
 
  //Filters the Notes out based on search
 const handleFilterNotes = (): Note[] => {
-    if (searchText.length > 1) {
+    if (searchText.length >= 1) {
         const filteredNotes = notes.filter((note)=> note.note.toLowerCase().includes(searchText.toLowerCase()));
         return filteredNotes;
     } else {
