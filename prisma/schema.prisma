@@ -8,8 +8,8 @@ datasource db {
 }
 
 model notes {
-  id            Int      @id @default(autoincrement())
-  note          String?
-  created_at    DateTime @default(now())
+  id   Int     @id @default(autoincrement())
+  note String?
+  created_at DateTime @default(now())
   date_modified DateTime @updatedAt
 }

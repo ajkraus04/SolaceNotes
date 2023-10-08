@@ -69,6 +69,7 @@ const handleAddCard = async (noteText:String):Promise<handleAddCardOutput> => {
     }
 }
 
+//Sorts Notes based on Order Modified
 const handleNoteStateChange = (note: Note) => {
     let indexOfNoteToChange;
     const updatedNotes = notes.map((msg, index)=>{
