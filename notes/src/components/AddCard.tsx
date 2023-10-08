@@ -1,29 +1,35 @@
 'use client'
 import {useState} from "react";
+import { handleAddCardOutput } from "@/types";
 
 type AddCardProps = {
-    handleAddCard: (note: string) => Promise<boolean>;
+    handleAddCard: (note: string) => Promise<handleAddCardOutput>;
 }
+
+
 
 export default function AddCard({ handleAddCard  } : AddCardProps){
     
     const [noteText, setNoteText] = useState<string>("")
+    const [errorText, setErrorText] = useState<string>("")
 
     //AddCard Handler
     const handleCards = async () => {
-        const isSuccess: boolean = await handleAddCard(noteText);
-        if (isSuccess) {
+        const isSuccess: handleAddCardOutput  = await handleAddCard(noteText);
+        if (isSuccess.success) {
             setNoteText("")
+            setErrorText("")
         } else {
-            console.log("An error has occured")
+            if (isSuccess.error) setErrorText(isSuccess.error.error)
         }
     }
 
    
     return(
     <div className="card w-96 h-72 bg-primary shadow-xl p-2 text-black">
+      <p className="text-red-500">{errorText}</p>
       <textarea className="bg-white h-64 rounded-md p-2 resize-none" placeholder="Write your notes here..." onChange={(e)=> setNoteText(e.target.value)}  maxLength={300} value={noteText} ></textarea>
-      <button className="btn btn-accent" onClick={handleCards}>
+      <button className={noteText.length < 20 || noteText.length > 300 ? "btn btn-disabled" : "btn btn-accent"}  onClick={handleCards}>
             Save Note
       </button>
    </div>)

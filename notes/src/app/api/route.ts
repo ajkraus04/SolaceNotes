@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
         return NextResponse.json({ notes })
     } catch (err){
         console.log("There is an error insize the get /api route ", err)
-        return NextResponse.json({err})
+        return NextResponse.json({error: err}, {status: 500})
     }
 
 };
@@ -21,6 +21,14 @@ export async function GET(request: NextRequest) {
 export async function POST(request: NextRequest) {
     try {
         const {noteText} : {noteText: string} = await request.json();
+        //Throws Error if less than 20 characters long
+        if (noteText.length < 20 ) {
+            return NextResponse.json({error: "Note length must be longer than 20 characters"}, {status:500})
+        }
+        //Throws Error if greater than 300 characters long
+        if (noteText.length > 300) {
+            return NextResponse.json({error: "Note length must not exceed 3000 characters"}, {status: 500})
+        }
         const newNote = await prisma.notes.create({
             data: {
                 note: noteText
@@ -30,7 +38,7 @@ export async function POST(request: NextRequest) {
         return NextResponse.json({newNote})
     } catch (err) {
         console.log("There is an error in POST /api route ", err )
-        return NextResponse.json({err})
+        return NextResponse.json({error: err}, {status: 500})
     }
 };
 
@@ -38,6 +46,14 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
     try{
         const {id, note} : {id: number, note:string} = await request.json()
+        //Throws Error if less than 20 characters long
+        if (note.length < 20 ) {
+            return NextResponse.json({error: "Note length must be longer than 20 characters"}, {status:500})
+        }
+        //Throws Error if greater than 300 characters long
+        if (note.length > 300) {
+            return NextResponse.json({error: "Note length must not exceed 3000 characters"}, {status: 500})
+        }
         const updatedNote = await prisma.notes.update({
             where: {
                 id: id
@@ -49,7 +65,7 @@ export async function PUT(request: NextRequest) {
         return NextResponse.json({updatedNote})
     } catch (err) {
         console.log("There is an error in UPDATE /api route ", err)
-        return NextResponse.json({err})
+        return NextResponse.json({error: err},{status:500})
     }
 }
 
@@ -66,6 +82,6 @@ export async function DELETE(request: NextRequest){
         return NextResponse.json({deletedNote})
     } catch (err) {
         console.log("There is an error in DELETE /api route ", err)
-        return NextResponse.json({err})
+        return NextResponse.json({error: err}, {status: 500})
     }
 }

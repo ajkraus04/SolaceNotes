@@ -2,7 +2,7 @@
 import SearchBar from "@/components/SearchBar";
 import NotesList from "@/components/NotesList";
 import { useState, useEffect, useRef } from "react";
-import { Note } from "@/types";
+import { Note, handleAddCardOutput } from "@/types";
 
 
 export default function NotesContainer() {
@@ -43,7 +43,7 @@ const handleDeleteNote = async (note: Note):Promise<void> => {
 }
 
 //Add card to DB and update state
-const handleAddCard = async (noteText:String):Promise<boolean> => {
+const handleAddCard = async (noteText:String):Promise<handleAddCardOutput> => {
     try{
         console.log(noteText)
         const newCardPromise = await fetch('/api',{
@@ -53,13 +53,18 @@ const handleAddCard = async (noteText:String):Promise<boolean> => {
             },
             body: JSON.stringify({noteText})
         });
+
+        //Do nothing to state if error
+        if (newCardPromise.status === 500){
+            return {success: false, error: await newCardPromise.json()};
+        }
         const {newNote} : {newNote: Note}= await newCardPromise.json();
         //Newest Note to the front
         setNotes([newNote,...notes]);
-        return true;
+        return {success: true};
     }catch (err) {
         console.log(`Error: ${err}`);
-        return false;
+        return {success: false};
     }
 }
 

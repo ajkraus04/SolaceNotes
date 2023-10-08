@@ -1,12 +1,12 @@
 'use client'
-import { Note } from "@/types";
+import { Note, handleAddCardOutput } from "@/types";
 import NoteCard from "./NoteCard";
 import AddCard from "./AddCard";
 import {v4 as uuidv4} from 'uuid'
 
 type NotesListProps = {
     notes: Note[];
-    handleAddCard: (note: String) => Promise<boolean>;
+    handleAddCard: (note: String) => Promise<handleAddCardOutput>;
     handleDeleteNote: (note: Note) => Promise<void>;
 }
 
