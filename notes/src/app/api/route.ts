@@ -1,4 +1,4 @@
-import { Prisma, PrismaClient } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -8,7 +8,7 @@ const prisma = new PrismaClient();
 //Gets all notes from DB
 export async function GET(request: NextRequest) {
     try {
-        const notes =  await prisma.notes.findMany();
+        const notes =  await prisma.notes.findMany({orderBy: {date_modified: "desc"}});
         return NextResponse.json({ notes })
     } catch (err){
         console.log("There is an error insize the get /api route ", err)
@@ -34,7 +34,6 @@ export async function POST(request: NextRequest) {
                 note: noteText
             }
         })
-        console.log(newNote)
         return NextResponse.json({newNote})
     } catch (err) {
         console.log("There is an error in POST /api route ", err )

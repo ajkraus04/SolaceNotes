@@ -1,6 +1,6 @@
 'use client'
-import SearchBar from "@/components/SearchBar";
-import NotesList from "@/components/NotesList";
+import SearchBar from "@/components/SearchBar/SearchBar";
+import NotesList from "@/components/NotesList/NotesList";
 import { useState, useEffect, useRef } from "react";
 import { Note, handleAddCardOutput } from "@/types";
 
@@ -9,6 +9,7 @@ export default function NotesContainer() {
 
  const [notes,setNotes] = useState<Note[]>([]);
  const [searchText, setSearchText] = useState<string>("")
+ 
  
  
  //Handler Functons
@@ -68,6 +69,24 @@ const handleAddCard = async (noteText:String):Promise<handleAddCardOutput> => {
     }
 }
 
+const handleNoteStateChange = (note: Note) => {
+    let indexOfNoteToChange;
+    const updatedNotes = notes.map((msg, index)=>{
+        if(msg.id === note.id){
+            msg.note = note.note;
+            msg.date_modified = note.date_modified;
+            indexOfNoteToChange = index;
+        }
+        return msg;
+    })
+    if (indexOfNoteToChange) {
+        const noteToTop = updatedNotes[indexOfNoteToChange];
+        updatedNotes.splice(indexOfNoteToChange,1);
+        updatedNotes.unshift(noteToTop);
+    }
+    setNotes(updatedNotes)
+}
+
  //Fetch Notes from DB upon Mount
  useEffect(()=>{
     fetch('/api')
@@ -80,7 +99,7 @@ const handleAddCard = async (noteText:String):Promise<handleAddCardOutput> => {
     return (
         <div className="flex flex-col items-center">
             <SearchBar handleSearchText={handleSearchText} />
-            <NotesList  handleAddCard={handleAddCard} handleDeleteNote={handleDeleteNote} notes={handleFilterNotes()}/>
+            <NotesList  handleNoteStateChange={handleNoteStateChange} handleAddCard={handleAddCard} handleDeleteNote={handleDeleteNote} notes={handleFilterNotes()}/>
         </div>
     )
 }

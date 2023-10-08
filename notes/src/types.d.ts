@@ -2,7 +2,9 @@
 
 export type Note = {
     id: Number,
-    note: string
+    note: string,
+    created_at: string,
+    date_modified: string
 }
 
 export type handleAddCardOutput = {
