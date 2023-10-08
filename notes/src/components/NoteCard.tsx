@@ -43,8 +43,8 @@ export default function NoteCard({note, handleDeleteNote}: NoteCardProps){
             <div className="flex justify-between card w-96 h-72 shadow-xl p-2 text-primary-content">
               <div className="break-words wrap">{noteText}</div>
               <div className="flex">
-                <button className="btn w-1/2 btn-accent grow" onClick={()=>setEditMode(true)}>Edit</button>
-                <button className="btn w-1/2 btn-error grow" onClick={()=>handleDeleteNote(note)}>Delete</button>
+                <button className="btn w-3/4 btn-accent grow" onClick={()=>setEditMode(true)}>Edit</button>
+                <button className="btn  btn-error grow" onClick={()=>handleDeleteNote(note)}>Delete</button>
               </div>
             </div>
             )}
